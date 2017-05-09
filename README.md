@@ -14,5 +14,6 @@ The application is secured with Spring Security which implementation is based on
 * To run server locally, clone repository and make sure You have latest Java JDK and Gradle installed.
 * Run: Application.java -> run main() method.
 * Or:
-  * You can build ```.jar``` file and run the ```.jar``` using: ```gradlew build```
+  * You can build ```.jar``` file: ```gradlew build```
+  * And run the ```.jar``` using: ```java -jar <jar file name>.jar```
 
