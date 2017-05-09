@@ -5,5 +5,5 @@ This is a Spring Boot server application for Tarakas piggy bank cross-platform a
 
 The application is secured with Spring Security which implementation is based on Vladimir Stankovic's [springboot-security-jwt](https://github.com/svlada/springboot-security-jwt) with slight changes in User context and JWT expiration time.
 
-[Spring Boot](https://projects.spring.io/spring-boot/)
-[Spring Security](http://projects.spring.io/spring-security/)
+* [Spring Boot](https://projects.spring.io/spring-boot/)
+* [Spring Security](http://projects.spring.io/spring-security/)
