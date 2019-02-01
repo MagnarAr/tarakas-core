@@ -1,18 +1,19 @@
 package ee.tarakas.core.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class User {
 
@@ -21,13 +22,7 @@ public class User {
     private String username;
     @JsonIgnore
     private String password;
-    private Set<GrantedAuthority> authorities = new HashSet<>();
-
-    public User(String username, String password, Set<GrantedAuthority> authorities) {
-        this.username = username;
-        this.password = password;
-        this.authorities = authorities;
-    }
+    private Set<GrantedAuthority> authorities;
 
     public User(String username, String password, String... extraRoles) {
         this.username = username;

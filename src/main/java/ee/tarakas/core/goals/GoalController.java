@@ -1,6 +1,5 @@
 package ee.tarakas.core.goals;
 
-
 import ee.tarakas.core.common.ErrorCode;
 import ee.tarakas.core.common.ErrorResponse;
 import ee.tarakas.core.security.model.UserContext;
@@ -24,20 +23,20 @@ public class GoalController {
         this.goalService = goalService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public List<Goal> getAllGoals(@AuthenticationPrincipal UserContext userDetails) {
         return goalService.getAllUserGoals(userDetails.getUserId());
     }
 
     // Adds new or updates existing goal
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public Goal saveGoal(@AuthenticationPrincipal UserContext userDetails, @RequestBody Goal goal) {
         goal.setUserId(userDetails.getUserId());
         return goalService.saveGoal(goal);
     }
 
     // Adds new or updates existing goal
-    @RequestMapping(value = "/{goalId}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{goalId}")
     public void deleteGoal(@AuthenticationPrincipal UserContext userDetails, @PathVariable String goalId) {
         goalService.deleteGoal(userDetails.getUserId(), goalId);
     }

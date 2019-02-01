@@ -1,5 +1,6 @@
 package ee.tarakas.core.bankaccount;
 
+import ee.tarakas.core.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ public class BankAccountService {
         this.bankAccountRepository = bankAccountRepository;
     }
 
-    public BigDecimal getUserTotalBalance(String userId) {
+    BigDecimal getUserTotalBalance(String userId) {
         return bankAccountRepository.findByUserId(userId).stream()
                 .map(BankAccount::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -27,15 +28,24 @@ public class BankAccountService {
         BankAccount bankAccount = bankAccountList.stream()
                 .findFirst().filter(ba -> ba.getType() == BankAccountType.DEMO)
                 .orElse(null);
+
         if (bankAccount == null) {
-            throw new IllegalArgumentException("User has no demo account");
+            throw new IllegalArgumentException("User has no bank account");
         }
         bankAccount.setAmount(bankAccount.getAmount().add(amount));
-        return insertOrUpdateBalance(bankAccount).getAmount();
+        return bankAccountRepository.save(bankAccount).getAmount();
     }
 
-    public BankAccount insertOrUpdateBalance(BankAccount bankAccount) {
-        bankAccount.setAmount(bankAccount.getAmount().setScale(2, BigDecimal.ROUND_HALF_UP));
-        return bankAccountRepository.save(bankAccount);
+    public void createBankAccount(User user) {
+        // create demo account for new user
+        BankAccount bankAccount = new BankAccount();
+        bankAccount.setUserId(user.getId());
+        bankAccount.setAmount(BigDecimal.ZERO);
+        bankAccount.setBank(Bank.LHV);
+        bankAccount.setAccountNumber("EE001001001001");
+        bankAccount.setToken("token");
+        bankAccount.setType(BankAccountType.DEMO);
+        bankAccountRepository.save(bankAccount);
     }
+
 }

@@ -1,23 +1,23 @@
 package ee.tarakas.core.goals;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 public class Goal {
 
     @Id
-    String id;
-    String userId;
-    String name;
+    private String id;
+    private String userId;
+    private String name;
     @JsonProperty("imageSource")
-    byte[] imageBase64Bytes;
-    BigDecimal price;
-    BigDecimal collectedAmount;
+    private byte[] imageBase64Bytes;
+    private BigDecimal price;
+    private BigDecimal collectedAmount;
 
 }

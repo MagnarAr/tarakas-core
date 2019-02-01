@@ -6,7 +6,7 @@ public class PasswordUtility {
 
     private static final int LOG_ROUNDS = 12; // valid range is 4 to 31
 
-    public static String generateStrongPassword(String plainTextPassword) {
+    public static String hashPassword(String plainTextPassword) {
         return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt(LOG_ROUNDS));
     }
 

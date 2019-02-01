@@ -7,10 +7,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -49,12 +50,12 @@ public class JwtTokenFactory {
                 .map(Object::toString)
                 .collect(Collectors.toList()));
 
-        DateTime currentTime = new DateTime();
+        LocalDate currentDate = LocalDate.now();
 
         String token = Jwts.builder()
                 .setClaims(claims)
                 .setIssuer(settings.getTokenIssuer())
-                .setIssuedAt(currentTime.toDate())
+                .setIssuedAt(Date.valueOf(currentDate))
                 //.setExpiration(currentTime.plusDays(settings.getTokenExpirationTime()).toDate())
                 .signWith(SignatureAlgorithm.HS512, settings.getTokenSigningKey())
                 .compact();
@@ -67,7 +68,7 @@ public class JwtTokenFactory {
             throw new IllegalArgumentException("Cannot create JWT Token without username");
         }
 
-        DateTime currentTime = new DateTime();
+        LocalDate currentDate = LocalDate.now();
 
         Claims claims = Jwts.claims().setSubject(userContext.getUsername() + ":" + userContext.getUserId());
         claims.put("scopes", Collections.singletonList(Scopes.REFRESH_TOKEN.authority()));
@@ -76,7 +77,7 @@ public class JwtTokenFactory {
                 .setClaims(claims)
                 .setIssuer(settings.getTokenIssuer())
                 .setId(UUID.randomUUID().toString())
-                .setIssuedAt(currentTime.toDate())
+                .setIssuedAt(Date.valueOf(currentDate))
                 //.setExpiration(currentTime.plusMinutes(settings.getRefreshTokenExpTime()).toDate())
                 .signWith(SignatureAlgorithm.HS512, settings.getTokenSigningKey())
                 .compact();

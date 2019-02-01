@@ -1,5 +1,6 @@
 package ee.tarakas.core.goals;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +46,7 @@ public class GoalService {
     }
 
     private void checkGoalImageSize(Goal goal) {
-        if (goal.getImageBase64Bytes() != null && goal.getImageBase64Bytes().length > 0) {
+        if (!ArrayUtils.isEmpty(goal.getImageBase64Bytes())) {
             try {
                 BufferedImage img = ImageIO.read(new ByteArrayInputStream(goal.getImageBase64Bytes()));
                 if (img.getWidth() != IMAGE_WIDTH && img.getHeight() != IMAGE_HEIGHT) {
@@ -57,20 +58,17 @@ public class GoalService {
         }
     }
 
-    public Goal getGoalDetails(String id) {
-        return goalRepository.findOne(id);
-    }
-
-    public List<Goal> getAllUserGoals(String userId) {
+    List<Goal> getAllUserGoals(String userId) {
         return goalRepository.findByUserId(userId);
     }
 
-    public void deleteGoal(String userId, String goalId) {
-        Goal goal = getGoalDetails(goalId);
-        if (goal.getUserId().equals(userId)) {
-            goalRepository.delete(goal);
-        } else {
-            throw new IllegalArgumentException("NO_SUCH_GOAL");
-        }
+    void deleteGoal(String userId, String goalId) {
+        goalRepository.findById(goalId).ifPresent(goal -> {
+            if (goal.getUserId().equals(userId)) {
+                goalRepository.delete(goal);
+            } else {
+                throw new IllegalArgumentException("NO_SUCH_GOAL");
+            }
+        });
     }
 }

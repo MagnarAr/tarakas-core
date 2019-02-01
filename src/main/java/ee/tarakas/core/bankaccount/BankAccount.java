@@ -1,22 +1,26 @@
 package ee.tarakas.core.bankaccount;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 
-@Data
-@NoArgsConstructor
-public class BankAccount {
+@Getter
+@Setter
+class BankAccount {
 
     @Id
-    String id;
-    String userId;
-    BigDecimal amount;
-    String accountNumber;
-    Bank bank;
-    String token;
-    BankAccountType type;
+    private String id;
+    private String userId;
+    private BigDecimal amount;
+    private String accountNumber;
+    private Bank bank;
+    private String token;
+    private BankAccountType type;
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount.setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
 
 }
