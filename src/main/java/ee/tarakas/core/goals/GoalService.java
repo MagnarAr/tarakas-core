@@ -1,7 +1,6 @@
 package ee.tarakas.core.goals;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -21,12 +20,11 @@ public class GoalService {
 
     private final GoalRepository goalRepository;
 
-    @Autowired
-    public GoalService(GoalRepository goalRepository) {
+    GoalService(GoalRepository goalRepository) {
         this.goalRepository = goalRepository;
     }
 
-    public Goal saveGoal(Goal goal) {
+    Goal saveGoal(Goal goal) {
         if (goal.getPrice().doubleValue() < MINIMUM_PRICE) {
             throw new IllegalArgumentException("PRICE_CANNOT_BE_NEGATIVE");
         }
