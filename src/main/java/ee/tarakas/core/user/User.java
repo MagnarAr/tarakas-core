@@ -26,14 +26,13 @@ public class User implements UserDetails {
     public User(String username, String password, String... extraRoles) {
         this.username = username;
         this.password = password;
-        // set roles as authorities
         this.authorities = Arrays.stream(extraRoles)
-                .map(r -> new SimpleGrantedAuthority(role(r)))
+                .map(this::toAuthority)
                 .collect(Collectors.toSet());
     }
 
-    private String role(String i) {
-        return "ROLE_" + i;
+    private GrantedAuthority toAuthority(String roleName) {
+        return new SimpleGrantedAuthority("ROLE_" + roleName);
     }
 
     @Override

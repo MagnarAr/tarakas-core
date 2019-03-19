@@ -31,7 +31,7 @@ public class UserRegistrationService {
         }
 
         final User user = createUser(username, password);
-        bankAccountService.createBankAccount(user);
+        bankAccountService.createDemoBankAccount(user);
     }
 
     /**

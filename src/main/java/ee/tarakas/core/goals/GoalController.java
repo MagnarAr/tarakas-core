@@ -1,8 +1,11 @@
 package ee.tarakas.core.goals;
 
+import ee.tarakas.core.goals.dto.GoalDTO;
+import ee.tarakas.core.goals.dto.GoalMapper;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -10,24 +13,26 @@ import java.util.List;
 public class GoalController {
 
     private final GoalService goalService;
+    private final GoalMapper goalMapper;
 
-    GoalController(GoalService goalService) {
+    GoalController(GoalService goalService, GoalMapper goalMapper) {
         this.goalService = goalService;
+        this.goalMapper = goalMapper;
     }
 
     @GetMapping
-    public List<Goal> getAllGoals(@AuthenticationPrincipal String userId) {
-        return goalService.getAllUserGoals(userId);
+    public List<GoalDTO> getAllGoals(@AuthenticationPrincipal String userId) {
+        return goalMapper.goalsToGoalDTOs(goalService.getAllUserGoals(userId));
     }
 
-    // Adds new or updates existing goal
     @PostMapping
-    public Goal saveGoal(@AuthenticationPrincipal String userId, @RequestBody Goal goal) {
+    public GoalDTO saveGoal(@AuthenticationPrincipal String userId, @Valid @RequestBody GoalDTO goalDto) {
+        Goal goal = goalMapper.goalDTOToGoal(goalDto);
         goal.setUserId(userId);
-        return goalService.saveGoal(goal);
+        goal = goalService.saveGoal(goal);
+        return goalMapper.goalToGoalDTO(goal);
     }
 
-    // Adds new or updates existing goal
     @DeleteMapping(value = "/{goalId}")
     public void deleteGoal(@AuthenticationPrincipal String userId, @PathVariable String goalId) {
         goalService.deleteGoal(userId, goalId);

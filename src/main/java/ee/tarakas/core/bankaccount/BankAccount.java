@@ -1,26 +1,33 @@
 package ee.tarakas.core.bankaccount;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
+@Builder
 @Getter
-@Setter
 class BankAccount {
 
     @Id
     private String id;
     private String userId;
-    private BigDecimal amount;
+
+    @Builder.Default
+    private BigDecimal amount = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);;
     private String accountNumber;
     private Bank bank;
     private String token;
     private BankAccountType type;
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount.setScale(2, BigDecimal.ROUND_HALF_UP);
+    public BigDecimal getAmount() {
+        return this.amount.setScale(2, RoundingMode.HALF_UP);
     }
+
+    public void updateAmountBy(BigDecimal amount) {
+    	this.amount = this.amount.add(amount).setScale(2, RoundingMode.HALF_UP);
+		}
 
 }

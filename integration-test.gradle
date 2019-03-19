@@ -1,0 +1,36 @@
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntime.extendsFrom testRuntime
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+    integrationTestCompileOnly.extendsFrom testCompileOnly
+}
+
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir "$projectDir/src/integrationTest/java"
+        }
+        resources.srcDir "$projectDir/integrationTest/resources"
+    }
+}
+
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    outputs.upToDateWhen { false }
+}
+
+idea {
+    module {
+        sourceDirs -= file('src/integrationTest/java')
+        testSourceDirs += file('src/integrationTest/java')
+        testResourceDirs += sourceSets.integrationTest.resources.srcDirs
+    }
+}
+
+// check.dependsOn integrationTest
+// integrationTest.mustRunAfter test
